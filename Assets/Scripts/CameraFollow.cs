@@ -1,20 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    Vector3 diffVector;
-    Transform player;
-    void Start()
-    {
-        player = FindObjectOfType<PlayerController>().transform;
-        diffVector = player.position - transform.position;
-    }
+    private Vector3 _diffVector;
+    private Transform _player;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        transform.position = player.position - diffVector;
+        _player = FindObjectOfType<PlayerController>().transform;
+        _diffVector = _player.position - transform.position;
+    }
+    private void Update()
+    {
+        transform.position = _player.position - _diffVector;
     }
 }

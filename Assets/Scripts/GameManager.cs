@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public bool gameStarted { get; private set; }
-    void Start()
+    public bool GameStarted { get; private set; }
+
+    private void Start()
     {
         StartGame();
     }
 
-    // Update is called once per frame
-   
-    public void StartGame()
+    private void StartGame()
     {
-        gameStarted = true;
+        GameStarted = true;
     }
     public void RestartGame()
     {

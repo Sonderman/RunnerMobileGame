@@ -1,21 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BackGroundSound : MonoBehaviour
 {
-    static BackGroundSound instance;
-    void Start()
+    private static BackGroundSound _instance;
+
+    private void Start()
     {
-        if (!instance)
+        if (!_instance)
         {
-            instance = this;
-        }else if(instance != this)
+            _instance = this;
+        }else if(_instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
        
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
 }

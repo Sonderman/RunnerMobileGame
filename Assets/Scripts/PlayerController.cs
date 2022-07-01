@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    delegate void TurnDelegate(); // Delegate : Fonksiyon pointeri
-    TurnDelegate turnDelegate;
+    private delegate void TurnDelegate(); // Delegate : Fonksiyon pointeri
+
+    private TurnDelegate _turnDelegate;
     public float moveSpeed=1;
-    private bool lookingRight=true;
-    GameManager gameManager;
-    Animator anim;
+    private bool _lookingRight=true;
+    private GameManager _gameManager;
+    private Animator _anim;
     public Transform rayOrigin;
     public ParticleSystem effect;
     public Text scoreText, hScoreText;
 
-    public int Score { get; private set; }
-    public int HScore { get; private set; }
+    private int Score { get; set; }
+    private int HScore { get; set; }
 
     private void Start()
     {
     #if UNITY_EDITOR
-        turnDelegate = TurnPlayerUsingKeyboard;
+        _turnDelegate = TurnPlayerUsingKeyboard;
     #endif
     #if UNITY_ANDROID
         turnDelegate = TurnPlayerUsingTouch;
     #endif
-        gameManager = GameObject.FindObjectOfType<GameManager>();
-        anim = gameObject.GetComponent<Animator>();
+        _gameManager = FindObjectOfType<GameManager>();
+        _anim = gameObject.GetComponent<Animator>();
         
         LoadHscore();
     }
@@ -39,17 +37,17 @@ public class PlayerController : MonoBehaviour
         hScoreText.text = HScore.ToString();
     }
 
-    void Update()
+    private void Update()
     {
         moveSpeed *= 1.0001f;
-        if(!gameManager.gameStarted)return;
+        if(!_gameManager.GameStarted)return;
         
-        anim.SetTrigger("GameStarted");
+        _anim.SetTrigger("GameStarted");
         //transform.position += transform.forward * Time.deltaTime*moveSpeed;
         transform.Translate(new Vector3(0, 0, 1) * Time.deltaTime * moveSpeed);
 
 
-        turnDelegate();
+        _turnDelegate();
 
         CheckFalling();
     }
@@ -68,17 +66,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    float elapsedTime = 0;
-    float freq = 1f / 5f;
+    private float _elapsedTime = 0;
+    private const float Freq = 1f / 5f;
+
     private void CheckFalling()
     {
-        if((elapsedTime += Time.deltaTime)> freq)
+        if((_elapsedTime += Time.deltaTime)> Freq)
         {
             if (!Physics.Raycast(rayOrigin.position,new Vector3(0,-1,0)) )
             {
-            anim.SetTrigger("Falling");
-            gameManager.RestartGame();
-                elapsedTime = 0;
+            _anim.SetTrigger("Falling");
+            _gameManager.RestartGame();
+                _elapsedTime = 0;
             }
         }
         
@@ -86,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void Turn()
     {
-        if (lookingRight)
+        if (_lookingRight)
         {
             transform.Rotate(new Vector3(0, 1, 0),-90);
         }
@@ -94,7 +93,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.Rotate(new Vector3(0, 1, 0), 90);
         }
-        lookingRight = !lookingRight;
+        _lookingRight = !_lookingRight;
     }
     private void OnTriggerEnter(Collider other)
     {
